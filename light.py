@@ -1,3 +1,9 @@
+from flask import Flask, request
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return """
 <!DOCTYPE html>
 <html>
     <head>
@@ -84,11 +90,18 @@ body {
                 rgb = `rgb(${red.value}, ${green.value}, ${blue.value})`;
                 document.getElementById("square").style.backgroundColor = rgb;
                 xhttp = new XMLHttpRequest();
-                xhttp.open("POST", "localhost", true);
-                xhttp.send(rgb);
+                xhttp.open("POST", "/rgb", true);
+                xhttp.send(JSON.stringify(rgb));
             }
         </script>
     </body>
 </html>
+    """
 
+@app.route('/rgb', methods=['POST'])
+def rgb():
+    print(request.data)
+    return 'success'
 
+if __name__ == '__main__':
+   app.run(host='0.0.0.0', debug=True)
