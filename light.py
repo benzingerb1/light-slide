@@ -90,6 +90,7 @@ body {
                 rgb = `rgb(${red.value}, ${green.value}, ${blue.value})`;
                 document.getElementById("square").style.backgroundColor = rgb;
                 xhttp = new XMLHttpRequest();
+                xhttp.setRequestHeader("Content-Type", "application/json");
                 xhttp.open("POST", "/rgb", true);
                 xhttp.send(JSON.stringify(rgb));
             }
@@ -100,7 +101,7 @@ body {
 
 @app.route('/rgb', methods=['POST'])
 def rgb():
-    print(request.data)
+    print(request.get_json())
     return 'success'
 
 if __name__ == '__main__':
