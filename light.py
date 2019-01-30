@@ -1,4 +1,5 @@
 from flask import Flask, request
+from gpiozero import RGBLED
 app = Flask(__name__)
 
 @app.route('/')
@@ -89,10 +90,15 @@ body {
             function rgbize() {
                 rgb = `rgb(${red.value}, ${green.value}, ${blue.value})`;
                 document.getElementById("square").style.backgroundColor = rgb;
+                json = {
+                    'red': (red.value / 255),
+                    'green': (green.value / 255),
+                    'blue': (blue.value / 255),
+                };
                 xhttp = new XMLHttpRequest();
-                xhttp.setRequestHeader("Content-Type", "application/json");
                 xhttp.open("POST", "/rgb", true);
-                xhttp.send(JSON.stringify(rgb));
+                xhttp.setRequestHeader("Content-Type", "application/json");
+                xhttp.send(JSON.stringify(json));
             }
         </script>
     </body>
@@ -101,7 +107,9 @@ body {
 
 @app.route('/rgb', methods=['POST'])
 def rgb():
-    print(request.get_json())
+    data = request.get_json()
+    rgbTup = (data['red'], data['green'], data['blue'])
+    print(rgbTup)
     return 'success'
 
 if __name__ == '__main__':
